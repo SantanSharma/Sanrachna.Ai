@@ -401,6 +401,15 @@ target: "https://localhost:7049"
   - Access application via `https://localhost:7049` (backend port)
 - **Key Learning**: Never run Angular independently during development; let ASP.NET Core manage it
 
+#### v1.0.2 - Fixed Git Tracking Issues (December 4, 2025)
+- **Issue**: Git showing hundreds of changed files after every Angular compilation
+- **Root Cause**: Angular build cache (`.angular/` folder) was being tracked by git
+- **Solution**: 
+  - Updated `.gitignore` to exclude Angular cache and build artifacts
+  - Added exclusions: `.angular/`, `ClientApp/.angular/`, `ClientApp/dist/`, `ClientApp/node_modules/`
+- **Result**: Git now only tracks source code, not generated files
+- **Key Learning**: Build artifacts and cache files should never be committed to version control
+
 ---
 
 ### Planned Updates
