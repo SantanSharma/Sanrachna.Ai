@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sanrachna.Ai")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d44195f41224d1e579d9fd00621b18fc545fdb74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b2e3074f3e4286f0a00c1038c9421232d6912b8d")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sanrachna.Ai")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sanrachna.Ai")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
