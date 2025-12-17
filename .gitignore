@@ -1,15 +1,28 @@
 # See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
+# ===========================================
+# MONOREPO .gitignore - Applies to ALL subfolders
+# ===========================================
 
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
+# Compiled output (no leading slash = matches anywhere)
+dist/
+tmp/
+out-tsc/
+bazel-out/
+build/
+*.js.map
+
+# Node - matches node_modules ANYWHERE in the repo
+node_modules/
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+
+# Angular cache - matches .angular ANYWHERE
+.angular/
 
 # IDEs and editors
 .idea/
@@ -29,14 +42,45 @@ yarn-error.log
 .history/*
 
 # Miscellaneous
-/.angular/cache
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
+connect.lock
+coverage/
+libpeerconnection.log
 testem.log
-/typings
+typings/
 
 # System files
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+*~
+
+# Environment files (optional - uncomment if needed)
+# .env
+# .env.local
+# .env.*.local
+
+# .NET / Backend
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+packages/
+*.nupkg
+
+# Logs
+logs/
+Logs/
+*.log
+**/Logs/*.txt
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
