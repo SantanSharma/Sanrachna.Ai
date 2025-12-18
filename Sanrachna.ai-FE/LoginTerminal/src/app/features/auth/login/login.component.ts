@@ -1,9 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { environment } from '../../../../environments/environment';
+
+declare const google: any;
 
 /**
  * Login Component
@@ -183,20 +186,71 @@ import { ToastService } from '../../../core/services/toast.service';
   `,
   styles: []
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   protected authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private fb = inject(FormBuilder);
   private toastService = inject(ToastService);
+  private ngZone = inject(NgZone);
 
   showPassword = signal(false);
+  private googleClientId = environment.oauth.google.clientId;
 
   loginForm: FormGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(6)]],
     rememberMe: [false]
   });
+
+  ngOnInit(): void {
+    this.initializeGoogleSignIn();
+  }
+
+  private initializeGoogleSignIn(): void {
+    // Wait for Google script to load
+    if (typeof google !== 'undefined' && google.accounts) {
+      this.renderGoogleButton();
+    } else {
+      // If script not loaded yet, wait and retry
+      const checkGoogle = setInterval(() => {
+        if (typeof google !== 'undefined' && google.accounts) {
+          clearInterval(checkGoogle);
+          this.renderGoogleButton();
+        }
+      }, 100);
+
+      // Stop checking after 5 seconds
+      setTimeout(() => clearInterval(checkGoogle), 5000);
+    }
+  }
+
+  private renderGoogleButton(): void {
+    google.accounts.id.initialize({
+      client_id: this.googleClientId,
+      callback: (response: any) => this.handleGoogleCredentialResponse(response),
+      auto_select: false,
+      cancel_on_tap_outside: true
+    });
+  }
+
+  private handleGoogleCredentialResponse(response: any): void {
+    // Run inside Angular zone to ensure change detection works
+    this.ngZone.run(() => {
+      if (response.credential) {
+        this.authService.googleLogin(response.credential).subscribe({
+          next: () => {
+            this.toastService.success('Welcome!', 'You have successfully signed in with Google.');
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
+            this.router.navigateByUrl(returnUrl);
+          },
+          error: (error) => {
+            this.toastService.error('Google Login Failed', error.message || 'Authentication failed');
+          }
+        });
+      }
+    });
+  }
 
   togglePasswordVisibility(): void {
     this.showPassword.update(show => !show);
@@ -233,6 +287,16 @@ export class LoginComponent {
   }
 
   loginWithGoogle(): void {
-    this.toastService.info('Coming Soon', 'Google login will be available soon.');
+    // Trigger Google Sign-In popup
+    if (typeof google !== 'undefined' && google.accounts) {
+      google.accounts.id.prompt((notification: any) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          // Fallback: If prompt doesn't work, show manual message
+          this.toastService.info('Google Sign-In', 'Please allow popups or click the Google button again.');
+        }
+      });
+    } else {
+      this.toastService.error('Error', 'Google Sign-In is not available. Please refresh the page.');
+    }
   }
 }

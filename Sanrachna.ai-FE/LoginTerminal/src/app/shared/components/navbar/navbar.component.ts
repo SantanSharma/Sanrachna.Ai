@@ -53,9 +53,18 @@ import { AuthService } from '../../../core/services/auth.service';
 
           <!-- User Info -->
           <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
-              <span class="material-icons-outlined text-purple-400 text-lg">person</span>
-            </div>
+            @if (authService.currentUser()?.avatarUrl) {
+              <img 
+                [src]="authService.currentUser()?.avatarUrl" 
+                [alt]="authService.currentUser()?.name || 'User'"
+                class="w-8 h-8 rounded-full object-cover border border-purple-500/30"
+                (error)="onImageError($event)"
+              />
+            } @else {
+              <div class="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center">
+                <span class="material-icons-outlined text-purple-400 text-lg">person</span>
+              </div>
+            }
             <span class="text-gray-300 text-sm hidden sm:block">
               {{ authService.currentUser()?.name || 'User' }}
             </span>
@@ -120,5 +129,11 @@ export class NavbarComponent {
 
   closeMobileMenu(): void {
     this.mobileMenuOpen = false;
+  }
+
+  onImageError(event: Event): void {
+    // Hide broken image and let the fallback show
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
   }
 }

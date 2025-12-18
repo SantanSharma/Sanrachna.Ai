@@ -100,6 +100,23 @@ public class AuthController : ControllerBase
     }
 
     /// <summary>
+    /// Login or register using Google OAuth
+    /// </summary>
+    [HttpPost("google-login")]
+    [ProducesResponseType(typeof(ApiResponse<AuthResponseDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequestDto request)
+    {
+        var ipAddress = GetIpAddress();
+        var result = await _authService.GoogleLoginAsync(request, ipAddress);
+
+        if (result == null)
+            return BadRequest(ApiResponse.FailureResponse("Google authentication failed"));
+
+        return Ok(ApiResponse<AuthResponseDto>.SuccessResponse(result, "Login successful"));
+    }
+
+    /// <summary>
     /// Request password reset
     /// </summary>
     [HttpPost("forgot-password")]

@@ -39,6 +39,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>()!;
 
+// Google OAuth Settings
+builder.Services.Configure<GoogleSettings>(builder.Configuration.GetSection("GoogleSettings"));
+
 // Authentication
 builder.Services.AddAuthentication(options =>
 {

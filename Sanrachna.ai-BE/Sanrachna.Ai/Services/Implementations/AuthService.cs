@@ -1,9 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Sanrachna.Ai.Data;
+using Sanrachna.Ai.Helpers;
 using Sanrachna.Ai.Models.DTOs.Auth;
 using Sanrachna.Ai.Models.Entities;
 using Sanrachna.Ai.Services.Interfaces;
 using BCrypt.Net;
+using Google.Apis.Auth;
 
 namespace Sanrachna.Ai.Services.Implementations;
 
@@ -12,12 +15,18 @@ public class AuthService : IAuthService
     private readonly AppDbContext _context;
     private readonly ITokenService _tokenService;
     private readonly IAuditService _auditService;
+    private readonly GoogleSettings _googleSettings;
 
-    public AuthService(AppDbContext context, ITokenService tokenService, IAuditService auditService)
+    public AuthService(
+        AppDbContext context, 
+        ITokenService tokenService, 
+        IAuditService auditService,
+        IOptions<GoogleSettings> googleSettings)
     {
         _context = context;
         _tokenService = tokenService;
         _auditService = auditService;
+        _googleSettings = googleSettings.Value;
     }
 
     public async Task<AuthResponseDto?> LoginAsync(LoginRequestDto request, string ipAddress)
@@ -195,6 +204,99 @@ public class AuthService : IAuthService
         
         // For now, we'll just return true
         return true;
+    }
+
+    public async Task<AuthResponseDto?> GoogleLoginAsync(GoogleLoginRequestDto request, string ipAddress)
+    {
+        try
+        {
+            // Validate the Google ID token
+            var settings = new GoogleJsonWebSignature.ValidationSettings
+            {
+                Audience = new[] { _googleSettings.ClientId }
+            };
+
+            var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, settings);
+            
+            if (payload == null)
+                return null;
+
+            // Check if user exists with this Google ID or email
+            var user = await _context.Users
+                .Include(u => u.Role)
+                .FirstOrDefaultAsync(u => u.GoogleId == payload.Subject || u.Email.ToLower() == payload.Email.ToLower());
+
+            if (user == null)
+            {
+                // Create new user from Google account
+                var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+                if (userRole == null)
+                    return null;
+
+                user = new User
+                {
+                    Name = payload.Name ?? payload.Email.Split('@')[0],
+                    Email = payload.Email.ToLower(),
+                    PasswordHash = "", // No password for Google users
+                    GoogleId = payload.Subject,
+                    AvatarUrl = payload.Picture,
+                    RoleId = userRole.Id,
+                    IsActive = true,
+                    EmailConfirmed = payload.EmailVerified,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                // Load the role for token generation
+                user.Role = userRole;
+            }
+            else
+            {
+                // Update existing user with Google info if not already linked
+                if (string.IsNullOrEmpty(user.GoogleId))
+                {
+                    user.GoogleId = payload.Subject;
+                }
+                if (string.IsNullOrEmpty(user.AvatarUrl) && !string.IsNullOrEmpty(payload.Picture))
+                {
+                    user.AvatarUrl = payload.Picture;
+                }
+                user.LastLoginAt = DateTime.UtcNow;
+                user.EmailConfirmed = true; // Google verified the email
+            }
+
+            // Generate tokens
+            var accessToken = _tokenService.GenerateAccessToken(user);
+            var refreshToken = _tokenService.GenerateRefreshToken(ipAddress);
+            refreshToken.UserId = user.Id;
+
+            _context.RefreshTokens.Add(refreshToken);
+            await _context.SaveChangesAsync();
+
+            // Log the login
+            await _auditService.LogLoginAsync(user.Id, ipAddress, "Google OAuth");
+
+            return new AuthResponseDto
+            {
+                Token = accessToken,
+                RefreshToken = refreshToken.Token,
+                ExpiresAt = DateTime.UtcNow.AddHours(1),
+                User = new UserInfoDto
+                {
+                    Id = user.Id,
+                    Name = user.Name,
+                    Email = user.Email,
+                    AvatarUrl = user.AvatarUrl,
+                    Role = user.Role.Name
+                }
+            };
+        }
+        catch (InvalidJwtException)
+        {
+            return null; // Invalid Google token
+        }
     }
 
     public async Task<bool> ResetPasswordAsync(ResetPasswordRequestDto request)
