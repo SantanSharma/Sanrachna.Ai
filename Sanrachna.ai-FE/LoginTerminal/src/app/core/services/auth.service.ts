@@ -65,8 +65,8 @@ export class AuthService {
       try {
         const user = JSON.parse(userJson);
         this.currentUserSignal.set(user);
-        // Validate token on startup
-        this.validateToken().subscribe();
+        // Token validation will happen via HTTP interceptor on first API call
+        // Don't validate here to avoid clearing storage on network errors
       } catch {
         this.clearAuthData();
       }
@@ -292,10 +292,11 @@ export class AuthService {
   // Private helper methods
 
   private handleAuthSuccess(response: AuthResponse, rememberMe: boolean): void {
-    const storage = rememberMe ? localStorage : sessionStorage;
-    
-    storage.setItem(this.tokenKey, response.token);
-    storage.setItem(this.refreshTokenKey, response.refreshToken);
+    // Always use localStorage for token persistence across page refreshes
+    // sessionStorage is cleared on tab close, which causes issues on refresh
+    localStorage.setItem(this.tokenKey, response.token);
+    localStorage.setItem(this.refreshTokenKey, response.refreshToken);
+    localStorage.setItem(this.userKey, JSON.stringify(response.user));
     
     if (rememberMe) {
       localStorage.setItem(this.rememberMeKey, 'true');
@@ -303,14 +304,12 @@ export class AuthService {
       localStorage.removeItem(this.rememberMeKey);
     }
 
-    this.storeUser(response.user);
     this.currentUserSignal.set(response.user);
     this.isLoadingSignal.set(false);
   }
 
   private storeUser(user: UserInfo): void {
-    const storage = this.isRememberMeEnabled() ? localStorage : sessionStorage;
-    storage.setItem(this.userKey, JSON.stringify(user));
+    localStorage.setItem(this.userKey, JSON.stringify(user));
   }
 
   private getStoredUser(): string | null {
