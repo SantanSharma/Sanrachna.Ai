@@ -115,7 +115,7 @@ export class UserService {
         // Update stored user info if updating own profile
         const currentUserId = this.authService.getCurrentUserId();
         if (currentUserId === id) {
-          // Update the user info in local storage
+          // Update user in AuthService (updates both signal and localStorage)
           const userInfo: UserInfo = {
             id: updatedUser.id,
             name: updatedUser.name,
@@ -123,7 +123,7 @@ export class UserService {
             avatarUrl: updatedUser.avatarUrl,
             role: updatedUser.roleName
           };
-          this.updateStoredUser(userInfo);
+          this.authService.updateCurrentUser(userInfo);
         }
         this.isLoadingSignal.set(false);
       }),
@@ -201,13 +201,6 @@ export class UserService {
   }
 
   // Private helper methods
-
-  private updateStoredUser(user: UserInfo): void {
-    const storage = localStorage.getItem('lt_remember_me') === 'true' 
-      ? localStorage 
-      : sessionStorage;
-    storage.setItem('lt_auth_user', JSON.stringify(user));
-  }
 
   private handleError(error: HttpErrorResponse | Error): Observable<never> {
     let errorMessage = 'An unexpected error occurred';

@@ -34,6 +34,12 @@ export const routes: Routes = [
     title: 'Dashboard - Sanrachna Portal'
   },
   {
+    path: 'profile',
+    loadComponent: () => import('./features/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [authGuard],
+    title: 'Profile - Sanrachna Portal'
+  },
+  {
     path: 'settings',
     loadComponent: () => import('./features/settings/settings.component').then(m => m.SettingsComponent),
     canActivate: [authGuard],
