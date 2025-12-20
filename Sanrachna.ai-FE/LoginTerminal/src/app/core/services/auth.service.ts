@@ -235,15 +235,6 @@ export class AuthService {
   }
 
   /**
-   * Google OAuth login (placeholder)
-   */
-  loginWithGoogle(): Observable<AuthResponse> {
-    // This would redirect to Google OAuth in production
-    console.log('Google OAuth login initiated');
-    return throwError(() => new Error('Google OAuth not configured'));
-  }
-
-  /**
    * Get the current authentication token
    */
   getToken(): string | null {
@@ -264,6 +255,30 @@ export class AuthService {
    */
   isRememberMeEnabled(): boolean {
     return localStorage.getItem(this.rememberMeKey) === 'true';
+  }
+
+  /**
+   * Login with Google OAuth
+   * POST /api/Auth/google-login
+   */
+  googleLogin(idToken: string): Observable<AuthResponse> {
+    this.isLoadingSignal.set(true);
+
+    return this.http.post<ApiResponse<AuthResponse>>(`${this.apiUrl}/Auth/google-login`, { idToken }).pipe(
+      map(response => {
+        if (!response.success || !response.data) {
+          throw new Error(response.message || 'Google login failed');
+        }
+        return response.data;
+      }),
+      tap(authResponse => {
+        this.handleAuthSuccess(authResponse, true); // Google login always remembers
+      }),
+      catchError(error => {
+        this.isLoadingSignal.set(false);
+        return this.handleError(error);
+      })
+    );
   }
 
   /**
