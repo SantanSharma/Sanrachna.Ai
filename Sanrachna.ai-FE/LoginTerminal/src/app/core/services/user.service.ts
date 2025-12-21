@@ -7,7 +7,10 @@ import {
   ProfileUpdateRequest, 
   PasswordChangeRequest, 
   ApiResponse,
-  PaginatedResult
+  PaginatedResult,
+  AdminUserUpdateRequest,
+  RoleUpdateRequest,
+  Role
 } from '../models';
 import { environment } from '../../../environments/environment';
 import { AuthService } from './auth.service';
@@ -197,6 +200,91 @@ export class UserService {
         this.isLoadingSignal.set(false);
         return this.handleError(error);
       })
+    );
+  }
+
+  // ========== Admin Methods ==========
+
+  /**
+   * Admin update user (Admin only)
+   * PUT /api/Users/{id}/admin
+   */
+  adminUpdateUser(id: number, data: AdminUserUpdateRequest): Observable<User> {
+    this.isLoadingSignal.set(true);
+
+    return this.http.put<ApiResponse<User>>(`${this.apiUrl}/Users/${id}/admin`, data).pipe(
+      map(response => {
+        if (!response.success || !response.data) {
+          throw new Error(response.message || 'Failed to update user');
+        }
+        return response.data;
+      }),
+      tap(() => this.isLoadingSignal.set(false)),
+      catchError(error => {
+        this.isLoadingSignal.set(false);
+        return this.handleError(error);
+      })
+    );
+  }
+
+  /**
+   * Update user role (Admin only)
+   * PUT /api/Users/{id}/role
+   */
+  updateUserRole(id: number, roleId: number): Observable<void> {
+    this.isLoadingSignal.set(true);
+
+    const data: RoleUpdateRequest = { roleId };
+    return this.http.put<ApiResponse<void>>(`${this.apiUrl}/Users/${id}/role`, data).pipe(
+      map(response => {
+        if (!response.success) {
+          throw new Error(response.message || 'Failed to update role');
+        }
+        return undefined;
+      }),
+      tap(() => this.isLoadingSignal.set(false)),
+      catchError(error => {
+        this.isLoadingSignal.set(false);
+        return this.handleError(error);
+      })
+    );
+  }
+
+  /**
+   * Toggle user active status (Admin only)
+   * PUT /api/Users/{id}/toggle-active
+   */
+  toggleUserActive(id: number, isActive: boolean): Observable<void> {
+    this.isLoadingSignal.set(true);
+
+    return this.http.put<ApiResponse<void>>(`${this.apiUrl}/Users/${id}/toggle-active?isActive=${isActive}`, {}).pipe(
+      map(response => {
+        if (!response.success) {
+          throw new Error(response.message || 'Failed to update user status');
+        }
+        return undefined;
+      }),
+      tap(() => this.isLoadingSignal.set(false)),
+      catchError(error => {
+        this.isLoadingSignal.set(false);
+        return this.handleError(error);
+      })
+    );
+  }
+
+  /**
+   * Get all roles (Admin only)
+   * GET /api/Roles
+   */
+  getAllRoles(): Observable<Role[]> {
+    return this.http.get<ApiResponse<Role[]>>(`${this.apiUrl}/Roles`).pipe(
+      map(response => {
+        if (!response.success || !response.data) {
+          throw new Error(response.message || 'Failed to get roles');
+        }
+        return response.data;
+      }),
+      catchError(error => this.handleError(error))
     );
   }
 

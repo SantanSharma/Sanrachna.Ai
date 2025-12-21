@@ -110,6 +110,32 @@ export interface ProfileUpdateRequest {
 }
 
 /**
+ * Admin user update request (matches backend AdminUserUpdateDto)
+ */
+export interface AdminUserUpdateRequest {
+  name: string;
+  avatarUrl?: string;
+  roleId?: number;
+  isActive?: boolean;
+}
+
+/**
+ * Role update request (matches backend RoleUpdateDto)
+ */
+export interface RoleUpdateRequest {
+  roleId: number;
+}
+
+/**
+ * Role model (matches backend RoleDto)
+ */
+export interface Role {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+/**
  * Forgot password request (matches backend ForgotPasswordRequestDto)
  */
 export interface ForgotPasswordRequest {

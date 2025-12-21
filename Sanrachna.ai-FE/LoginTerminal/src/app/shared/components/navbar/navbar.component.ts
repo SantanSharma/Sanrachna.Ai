@@ -1,4 +1,4 @@
-import { Component, inject, signal, HostListener } from '@angular/core';
+import { Component, inject, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -91,6 +91,20 @@ import { AuthService } from '../../../core/services/auth.service';
                   </a>
                 </div>
                 
+                <!-- Admin Panel (Only for admin users) -->
+                @if (isAdmin()) {
+                  <div class="border-t border-dark-border py-1">
+                    <a 
+                      routerLink="/admin" 
+                      (click)="closeDropdown()"
+                      class="flex items-center gap-3 px-4 py-2 text-yellow-400 hover:text-yellow-300 hover:bg-slate-700 transition-colors"
+                    >
+                      <span class="material-icons-outlined text-lg">admin_panel_settings</span>
+                      <span>Admin Panel</span>
+                    </a>
+                  </div>
+                }
+                
                 <!-- Logout -->
                 <div class="border-t border-dark-border pt-1">
                   <a 
@@ -115,6 +129,12 @@ export class NavbarComponent {
   protected authService = inject(AuthService);
   
   dropdownOpen = signal(false);
+  
+  // Check if current user is admin
+  isAdmin = computed(() => {
+    const user = this.authService.currentUser();
+    return user?.role?.toLowerCase() === 'admin';
+  });
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: Event): void {
