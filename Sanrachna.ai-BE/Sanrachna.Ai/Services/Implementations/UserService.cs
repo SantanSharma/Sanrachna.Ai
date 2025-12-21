@@ -117,6 +117,52 @@ public class UserService : IUserService
         return true;
     }
 
+    public async Task<UserDto?> AdminUpdateAsync(int id, AdminUserUpdateDto dto)
+    {
+        var user = await _context.Users
+            .Include(u => u.Role)
+            .FirstOrDefaultAsync(u => u.Id == id);
+
+        if (user == null) return null;
+
+        user.Name = dto.Name;
+        user.AvatarUrl = dto.AvatarUrl;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        // Update role if provided
+        if (dto.RoleId.HasValue)
+        {
+            var role = await _context.Roles.FindAsync(dto.RoleId.Value);
+            if (role != null)
+            {
+                user.RoleId = dto.RoleId.Value;
+                user.Role = role;
+            }
+        }
+
+        // Update active status if provided
+        if (dto.IsActive.HasValue)
+        {
+            user.IsActive = dto.IsActive.Value;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return MapToDto(user);
+    }
+
+    public async Task<bool> ToggleActiveAsync(int userId, bool isActive)
+    {
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return false;
+
+        user.IsActive = isActive;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     private static UserDto MapToDto(User user)
     {
         return new UserDto

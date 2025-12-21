@@ -4,19 +4,15 @@ import { Router } from '@angular/router';
 import { Observable, of, tap, catchError, throwError, map, switchMap } from 'rxjs';
 import { 
   UserInfo,
-  User,
   LoginRequest, 
   RegisterRequest, 
   AuthResponse, 
-  ProfileUpdateRequest,
-  PasswordChangeRequest,
   TokenRefreshRequest,
   ApiResponse,
   ForgotPasswordRequest,
   ResetPasswordRequest
 } from '../models';
 import { environment } from '../../../environments/environment';
-import { Application } from '../models/application.model';
 
 /**
  * Authentication Service
@@ -309,6 +305,14 @@ export class AuthService {
   }
 
   private storeUser(user: UserInfo): void {
+    localStorage.setItem(this.userKey, JSON.stringify(user));
+  }
+
+  /**
+   * Update current user info (called after profile update)
+   */
+  updateCurrentUser(user: UserInfo): void {
+    this.currentUserSignal.set(user);
     localStorage.setItem(this.userKey, JSON.stringify(user));
   }
 
