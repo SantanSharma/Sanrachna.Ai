@@ -220,11 +220,15 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    // Get token for SSO
+    // Get token and user info for SSO
     const token = this.authService.getToken();
+    const user = this.authService.currentUser();
     
-    // Build URL with SSO token
-    const ssoUrl = `${app.url}?token=${encodeURIComponent(token || '')}`;
+    // Build URL with SSO token and user info
+    let ssoUrl = `${app.url}?token=${encodeURIComponent(token || '')}`;
+    if (user) {
+      ssoUrl += `&user=${encodeURIComponent(JSON.stringify(user))}`;
+    }
     
     this.toastService.info('Launching', `Opening ${app.name}...`);
     

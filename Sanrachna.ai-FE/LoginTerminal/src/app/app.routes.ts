@@ -57,7 +57,7 @@ export const routes: Routes = [
   {
     path: 'logout',
     loadComponent: () => import('./features/auth/logout/logout.component').then(m => m.LogoutComponent),
-    canActivate: [authGuard],
+    // No guard - allow SSO logout from external apps even if session expired
     title: 'Sign Out - Sanrachna Portal'
   },
   // Wildcard route - redirect to login

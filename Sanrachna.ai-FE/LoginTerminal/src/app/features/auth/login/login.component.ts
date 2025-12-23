@@ -241,8 +241,7 @@ export class LoginComponent implements OnInit {
         this.authService.googleLogin(response.credential).subscribe({
           next: () => {
             this.toastService.success('Welcome!', 'You have successfully signed in with Google.');
-            const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-            this.router.navigateByUrl(returnUrl);
+            this.handlePostLoginRedirect();
           },
           error: (error) => {
             this.toastService.error('Google Login Failed', error.message || 'Authentication failed');
@@ -250,6 +249,35 @@ export class LoginComponent implements OnInit {
         });
       }
     });
+  }
+
+  /**
+   * Handle redirect after successful login
+   * Supports both internal routes and external app URLs (SSO)
+   */
+  private handlePostLoginRedirect(): void {
+    const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+    
+    if (returnUrl) {
+      // Check if it's an external URL (starts with http)
+      if (returnUrl.startsWith('http://') || returnUrl.startsWith('https://')) {
+        // External app - redirect with token and user info for SSO
+        const token = this.authService.getToken();
+        const user = this.authService.currentUser();
+        const separator = returnUrl.includes('?') ? '&' : '?';
+        let redirectUrl = `${returnUrl}${separator}token=${encodeURIComponent(token || '')}`;
+        if (user) {
+          redirectUrl += `&user=${encodeURIComponent(JSON.stringify(user))}`;
+        }
+        window.location.href = redirectUrl;
+      } else {
+        // Internal route
+        this.router.navigateByUrl(returnUrl);
+      }
+    } else {
+      // Default to dashboard
+      this.router.navigate(['/dashboard']);
+    }
   }
 
   togglePasswordVisibility(): void {
@@ -275,10 +303,7 @@ export class LoginComponent implements OnInit {
     this.authService.login({ email, password, rememberMe }).subscribe({
       next: () => {
         this.toastService.success('Welcome!', 'You have successfully signed in.');
-        
-        // Redirect to return URL or dashboard
-        const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/dashboard';
-        this.router.navigateByUrl(returnUrl);
+        this.handlePostLoginRedirect();
       },
       error: (error) => {
         this.toastService.error('Login Failed', error.message || 'Invalid credentials');
