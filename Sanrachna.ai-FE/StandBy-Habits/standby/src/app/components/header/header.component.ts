@@ -1,11 +1,22 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { UserProfileDropdownComponent } from '../../core/components';
 
+/**
+ * ============================================================================
+ * Header Component
+ * ============================================================================
+ *
+ * Main navigation header for the StandBy application.
+ * Uses the reusable UserProfileDropdownComponent for user authentication UI.
+ *
+ * ============================================================================
+ */
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, UserProfileDropdownComponent],
   template: `
     <header class="bg-standby-bg border-b border-standby-border sticky top-0 z-50">
       <div class="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -51,6 +62,14 @@ import { RouterModule } from '@angular/router';
               </svg>
               <span class="hidden sm:inline">New Habit</span>
             </a>
+
+            <!-- User Profile Dropdown (Reusable Component) -->
+            <div class="ml-2">
+              <app-user-profile-dropdown
+                [showName]="true"
+                avatarGradient="linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%)"
+              />
+            </div>
           </nav>
         </div>
       </div>
@@ -63,4 +82,6 @@ import { RouterModule } from '@angular/router';
     }
   `]
 })
-export class HeaderComponent {}
+export class HeaderComponent {
+  // Component is now clean - all user profile logic is handled by UserProfileDropdownComponent
+}
