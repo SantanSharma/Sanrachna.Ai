@@ -6,8 +6,8 @@ export const environment = {
   appName: 'LoginTerminal',
   appVersion: '1.0.0',
   
-  // API Configuration - Backend runs on port 5076
-  apiUrl: 'http://localhost:5076/api',
+  // API Configuration - Backend runs on port 8080
+  apiUrl: 'http://localhost:8080/api',
   
   // Authentication Configuration
   auth: {

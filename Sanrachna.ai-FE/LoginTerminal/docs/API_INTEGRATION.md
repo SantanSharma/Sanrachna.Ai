@@ -86,7 +86,7 @@ This document provides a comprehensive summary of the API integration between th
 - `src/app/features/auth/login/login.component.ts` - Removed demo mode notice
 
 ### Configuration
-- `src/environments/environment.ts` - Updated API URL to port 5076
+- `src/environments/environment.ts` - Updated API URL to port 8080
 
 ## API Response Format
 
@@ -127,8 +127,8 @@ interface ApiResponse<T> {
 
 ### Development
 - Frontend: `http://localhost:4200`
-- Backend: `http://localhost:5076`
-- Swagger: `http://localhost:5076/swagger`
+- Backend: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger`
 
 ### CORS
 Ensure the backend has CORS configured to allow requests from `http://localhost:4200`
