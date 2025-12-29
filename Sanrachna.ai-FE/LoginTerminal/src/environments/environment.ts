@@ -7,7 +7,7 @@ export const environment = {
   appVersion: '1.0.0',
   
   // API Configuration - Backend runs on port 8080
-  apiUrl: 'http://localhost:8080/api',
+  apiUrl: 'https://sanrachna-ai-api-dev-dshsc6dce7avf9c7.southindia-01.azurewebsites.net/api',
   
   // Authentication Configuration
   auth: {

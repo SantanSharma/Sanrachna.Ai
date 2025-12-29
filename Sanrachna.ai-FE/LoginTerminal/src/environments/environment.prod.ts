@@ -7,7 +7,7 @@ export const environment = {
   appVersion: '1.0.0',
   
   // API Configuration
-  apiUrl: 'https://api.sanrachna.com/api',
+  apiUrl: 'https://sanrachna-ai-api-dev-dshsc6dce7avf9c7.southindia-01.azurewebsites.net/api',
   
   // Authentication Configuration
   auth: {

@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/769f7487-2509-4842-9870-98a42150d64b/resourceGroups/rg-azure-sanrachna-ai/providers/Microsoft.Web/sites/sanrachna-ai-api-dev",
+    "appService.deploySubpath": "Sanrachna.ai-BE\\Sanrachna.Ai"
+}
