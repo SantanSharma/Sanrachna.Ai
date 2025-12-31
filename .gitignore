@@ -61,6 +61,27 @@ Thumbs.db
 # .env.local
 # .env.*.local
 
+# ===========================================
+# SECRETS - Never commit these!
+# ===========================================
+# Uncomment below line if you want to exclude Development settings with secrets
+# appsettings.Development.json
+
+# Azure publish profiles
+*.pubxml
+*.pubxml.user
+*.publishproj
+
+# Build/Publish artifacts
+publish/
+publish.zip
+*.zip
+
+# User secrets (safe to ignore)
+secrets.json
+appsettings.Development.local.json
+appsettings.*.local.json
+
 # .NET / Backend
 bin/
 obj/
