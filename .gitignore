@@ -65,7 +65,7 @@ Thumbs.db
 # SECRETS - Never commit these!
 # ===========================================
 # Uncomment below line if you want to exclude Development settings with secrets
-# appsettings.Development.json
+appsettings.Development.json
 
 # Azure publish profiles
 *.pubxml
@@ -105,3 +105,6 @@ coverage/
 # Temporary files
 *.tmp
 *.temp
+
+# sanrachna ignore files
+.sanrachnaignore

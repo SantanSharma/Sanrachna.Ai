@@ -39,12 +39,6 @@ This API provides authentication and authorization services for the Sanrachna.AI
     "DefaultConnection": "Server=your-server;Database=SanrachnaAi;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
-
- "ConnectionStrings": {
-    "DefaultConnection": "Server=localhost;Port=3306;Database=sanrachna_ai;User=root;Password=*****;"
-  },
-  "_AzureConnectionString_Reference": "Server=dev-sanrachna.mysql.database.azure.com;Port=3306;Database=sanrachna_ai;User=sanrachnadb;Password=*****;",
-  
 ```
 
 2. Configure JWT settings:
