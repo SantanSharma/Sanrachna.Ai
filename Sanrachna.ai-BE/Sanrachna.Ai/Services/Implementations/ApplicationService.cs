@@ -37,15 +37,25 @@ public class ApplicationService : IApplicationService
 
     public async Task<List<ApplicationDto>> GetUserApplicationsAsync(int userId)
     {
-        var userApps = await _context.UserApplications
-            .Include(ua => ua.Application)
-            .Where(ua => ua.UserId == userId && ua.Application.IsActive)
-            .OrderBy(ua => ua.Application.Category)
-            .ThenBy(ua => ua.Application.DisplayOrder)
-            .ThenBy(ua => ua.Application.Name)
+        // TODO: Uncomment below when user-application mapping is needed
+        // var userApps = await _context.UserApplications
+        //     .Include(ua => ua.Application)
+        //     .Where(ua => ua.UserId == userId && ua.Application.IsActive)
+        //     .OrderBy(ua => ua.Application.Category)
+        //     .ThenBy(ua => ua.Application.DisplayOrder)
+        //     .ThenBy(ua => ua.Application.Name)
+        //     .ToListAsync();
+        // return userApps.Select(ua => MapToDto(ua.Application, ua.GrantedAt)).ToList();
+
+        // For now, return ALL active applications to every user
+        var apps = await _context.Applications
+            .Where(a => a.IsActive)
+            .OrderBy(a => a.Category)
+            .ThenBy(a => a.DisplayOrder)
+            .ThenBy(a => a.Name)
             .ToListAsync();
 
-        return userApps.Select(ua => MapToDto(ua.Application, ua.GrantedAt)).ToList();
+        return apps.Select(a => MapToDto(a)).ToList();
     }
 
     public async Task<ApplicationDto?> CreateAsync(ApplicationCreateDto dto)
