@@ -7,7 +7,7 @@
 echo "Stopping all Angular applications..."
 
 # Kill processes on specific ports
-for port in 4200 4202 4203; do
+for port in 4200 4202 4203 4204 4205; do
     pid=$(lsof -ti :$port)
     if [ ! -z "$pid" ]; then
         echo "Stopping process on port $port (PID: $pid)"

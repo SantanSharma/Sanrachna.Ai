@@ -34,6 +34,126 @@ npm start
 
 The app will be available at `http://localhost:4204`
 
+---
+
+
+
+
+-----
+-----
+-------
+----------
+
+## 🚀 Creating a New App from This Template
+
+Follow these steps to create a new application using this template:
+
+### Step 1: Copy the Template Folder
+
+```bash
+# From the Sanrachna.ai-FE directory
+cp -r LoginHeaderAngularTemplate YourNewAppName
+cd YourNewAppName
+```
+
+### Step 2: Update Files (5 files to change)
+
+#### 📄 File 1: `package.json`
+
+| Line | Property | Change To |
+|------|----------|-----------|
+| 2 | `"name"` | `"your-new-app-name"` |
+| 6 | `"start"` script port | `"ng serve --port 42XX"` |
+
+```json
+{
+  "name": "your-new-app-name",
+  "scripts": {
+    "start": "ng serve --port 4205"
+  }
+}
+```
+
+#### 📄 File 2: `angular.json`
+
+| Line | Property | Change To |
+|------|----------|-----------|
+| 5 | Project key under `"projects"` | `"your-new-app-name"` |
+| 86 | `"defaultProject"` | `"your-new-app-name"` |
+
+#### 📄 File 3: `src/app/app.config.ts`
+
+Update the SSO configuration (around line 18-22):
+
+```typescript
+const ssoAuthConfig: SsoAuthConfig = {
+  loginTerminalUrl: 'http://localhost:4200',     // Keep same
+  currentAppUrl: 'http://localhost:4205',        // ← Your new port
+  tokenStorageKey: 'yournewapp_auth_token',      // ← Unique key
+  userStorageKey: 'yournewapp_user',             // ← Unique key
+  enableVisibilityValidation: true,
+  enableDebugLogging: true,
+  loginPath: '/login',
+  logoutPath: '/logout'
+};
+```
+
+#### 📄 File 4: `src/app/components/header/header.component.ts`
+
+Change the `appName` property (around line 53):
+
+```typescript
+appName = 'Your New App Name';
+```
+
+#### 📄 File 5: `src/index.html`
+
+Update the title tag (line 6):
+
+```html
+<title>Your New App Name</title>
+```
+
+### Step 3: Install and Run
+
+```bash
+npm install
+npm start
+```
+
+Your app will be running at `http://localhost:42XX`
+
+---
+
+## 📋 Quick Checklist
+
+Use this checklist when creating a new app:
+
+- [ ] Copy folder and rename
+- [ ] `package.json` → Change `name` and `port`
+- [ ] `angular.json` → Change project name (2 places)
+- [ ] `app.config.ts` → Change `currentAppUrl`, `tokenStorageKey`, `userStorageKey`
+- [ ] `header.component.ts` → Change `appName`
+- [ ] `index.html` → Change `<title>`
+- [ ] Run `npm install`
+- [ ] Run `npm start`
+
+---
+
+## 🔌 Port Allocation
+
+| Application | Port |
+|-------------|------|
+| Login Terminal | 4200 |
+| StandBy Habits | 4202 |
+| Anti-Goal | 4203 |
+| This Template | 4204 |
+| **Next Available** | **4205+** |
+
+> ⚠️ Always use a unique port for each application!
+
+---
+
 ## Project Structure
 
 ```
@@ -59,31 +179,6 @@ LoginHeaderAngularTemplate/
 └── tsconfig.json               # TypeScript config
 ```
 
-## Configuration
-
-### SSO Settings
-
-Edit `src/app/app.config.ts` to configure SSO:
-
-```typescript
-const ssoAuthConfig: SsoAuthConfig = {
-  loginTerminalUrl: 'http://localhost:4200',  // Login Terminal URL
-  currentAppUrl: 'http://localhost:4204',     // This app's URL
-  tokenStorageKey: 'template_auth_token',     // Token storage key
-  userStorageKey: 'template_user',            // User storage key
-  enableVisibilityValidation: true,           // Auto-validate on focus
-  enableDebugLogging: true,                   // Debug logging
-};
-```
-
-### App Name
-
-Edit `src/app/components/header/header.component.ts`:
-
-```typescript
-appName = 'Your App Name';
-```
-
 ## Customization
 
 ### Colors
@@ -97,6 +192,7 @@ module.exports = {
       colors: {
         app: {
           50: '#eef2ff',
+          100: '#e0e7ff',
           // ... customize your colors
         }
       }
@@ -107,39 +203,32 @@ module.exports = {
 
 ### Adding New Pages
 
-1. Create a component in `src/app/pages/`
-2. Add a route in `src/app/app.routes.ts`
+1. Create a component in `src/app/pages/your-page/`
+2. Add a route in `src/app/app.routes.ts`:
 
-## Reusing This Template
-
-To create a new app from this template:
-
-1. Copy the `LoginHeaderAngularTemplate` folder
-2. Rename it to your app name
-3. Update `package.json`:
-   - Change `name` to your app name
-   - Update port in `start` script
-4. Update `angular.json` project name
-5. Update `app.config.ts` with new SSO settings
-6. Update header `appName` to your app name
+```typescript
+{
+  path: 'your-page',
+  loadComponent: () => import('./pages/your-page/your-page.component')
+    .then(m => m.YourPageComponent)
+}
+```
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `npm start` | Start dev server on port 4204 |
+| `npm start` | Start dev server |
 | `npm run build` | Build for production |
 | `npm run watch` | Build and watch for changes |
 
-## Port Allocation
+## SSO Authentication Flow
 
-This app runs on port **4204** by default. Other apps:
-
-- Login Terminal: 4200
-- StandBy Habits: 4202
-- Anti-Goal: 4203
-- **This Template: 4204**
+1. User visits your app → Redirected to Login Terminal (port 4200)
+2. User logs in → Redirected back with JWT token in URL
+3. App extracts token → Stores in localStorage
+4. User is now authenticated across all SSO apps
 
 ## License
 
-Internal use only.
+Internal use only - Sanrachna.AI
