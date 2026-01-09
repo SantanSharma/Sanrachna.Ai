@@ -4,9 +4,11 @@
 # Sanrachna.AI Frontend Applications Starter Script
 # ============================================================================
 # This script starts all frontend applications on their designated ports:
-# - Login Terminal:  http://localhost:4200
-# - StandBy Habits:  http://localhost:4202
-# - Anti-Goal:       http://localhost:4203
+# - Login Terminal:           http://localhost:4200
+# - StandBy Habits:           http://localhost:4202
+# - Anti-Goal:                http://localhost:4203
+# - LoginHeaderAngularTemplate: http://localhost:4204
+# - Viraasat360:              http://localhost:4205
 # ============================================================================
 
 # Colors for terminal output
@@ -97,12 +99,36 @@ else
 fi
 
 echo ""
+
+# LoginHeaderAngularTemplate (Port 4204)
+cd "$BASE_DIR/LoginHeaderAngularTemplate" 2>/dev/null
+if [ -d "$BASE_DIR/LoginHeaderAngularTemplate" ]; then
+    start_app "LoginHeaderAngularTemplate" "LoginHeaderAngularTemplate" 4204
+    PIDS+=($!)
+else
+    echo -e "${RED}  ✗ LoginHeaderAngularTemplate directory not found${NC}"
+fi
+
+echo ""
+
+# Viraasat360 (Port 4205)
+cd "$BASE_DIR/Viraasat360" 2>/dev/null
+if [ -d "$BASE_DIR/Viraasat360" ]; then
+    start_app "Viraasat360" "Viraasat360" 4205
+    PIDS+=($!)
+else
+    echo -e "${RED}  ✗ Viraasat360 directory not found${NC}"
+fi
+
+echo ""
 echo -e "${BLUE}============================================${NC}"
 echo -e "${GREEN}All applications starting...${NC}"
 echo ""
-echo -e "  ${GREEN}●${NC} Login Terminal:  ${BLUE}http://localhost:4200${NC}"
-echo -e "  ${GREEN}●${NC} StandBy Habits:  ${BLUE}http://localhost:4202${NC}"
-echo -e "  ${GREEN}●${NC} Anti-Goal:       ${BLUE}http://localhost:4203${NC}"
+echo -e "  ${GREEN}●${NC} Login Terminal:           ${BLUE}http://localhost:4200${NC}"
+echo -e "  ${GREEN}●${NC} StandBy Habits:           ${BLUE}http://localhost:4202${NC}"
+echo -e "  ${GREEN}●${NC} Anti-Goal:                ${BLUE}http://localhost:4203${NC}"
+echo -e "  ${GREEN}●${NC} LoginHeaderAngularTemplate: ${BLUE}http://localhost:4204${NC}"
+echo -e "  ${GREEN}●${NC} Viraasat360:              ${BLUE}http://localhost:4205${NC}"
 echo ""
 echo -e "${YELLOW}Press Ctrl+C to stop all applications${NC}"
 echo -e "${BLUE}============================================${NC}"
