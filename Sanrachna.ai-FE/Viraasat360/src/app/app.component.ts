@@ -12,7 +12,7 @@ import { SsoAuthService } from './core';
     @if (isAuthenticated()) {
       <div class="min-h-screen bg-slate-900">
         <app-header></app-header>
-        <main class="pt-16">
+        <main>
           <router-outlet></router-outlet>
         </main>
       </div>
