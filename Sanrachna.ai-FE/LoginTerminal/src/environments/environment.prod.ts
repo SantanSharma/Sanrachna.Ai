@@ -22,7 +22,7 @@ export const environment = {
   oauth: {
     google: {
       clientId: '266255622565-6fl707tngjd8449gf26nf43selsaqrd5.apps.googleusercontent.com',
-      redirectUri: 'https://login.sanrachna.com/auth/google/callback'
+      redirectUri: 'https://ltscan.netlify.app/auth/google/callback'
     }
   },
   
