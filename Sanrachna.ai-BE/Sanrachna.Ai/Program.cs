@@ -23,7 +23,7 @@ builder.Host.UseSerilog();
 
 // Add services to the container
 
-// Database Context - MySQL
+// Database Context - PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 // Validate connection string
@@ -33,18 +33,16 @@ if (string.IsNullOrEmpty(connectionString) || connectionString.Contains("WILL_BE
     // Continue without DB for health check to work
 }
 
-var serverVersion = new MySqlServerVersion(new Version(8, 0, 36)); // Adjust version as needed
-
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     if (!string.IsNullOrEmpty(connectionString) && !connectionString.Contains("WILL_BE_SET"))
     {
-        options.UseMySql(connectionString, serverVersion, mySqlOptions =>
+        options.UseNpgsql(connectionString, npgsqlOptions =>
         {
-            mySqlOptions.EnableRetryOnFailure(
+            npgsqlOptions.EnableRetryOnFailure(
                 maxRetryCount: 5,
                 maxRetryDelay: TimeSpan.FromSeconds(30),
-                errorNumbersToAdd: null);
+                errorCodesToAdd: null);
         });
     }
 });

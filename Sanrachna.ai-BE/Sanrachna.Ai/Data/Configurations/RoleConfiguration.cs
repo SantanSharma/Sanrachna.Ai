@@ -23,7 +23,7 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
             .HasDefaultValue(false);
 
         builder.Property(r => r.CreatedAt)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Indexes
         builder.HasIndex(r => r.Name)

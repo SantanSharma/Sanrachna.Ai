@@ -26,7 +26,7 @@ public class UserSessionConfiguration : IEntityTypeConfiguration<UserSession>
             .HasMaxLength(500);
 
         builder.Property(us => us.CreatedAt)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Property(us => us.ExpiresAt)
             .IsRequired();
