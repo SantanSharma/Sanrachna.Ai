@@ -52,7 +52,7 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
             .HasDefaultValue(true);
 
         builder.Property(a => a.CreatedAt)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Indexes
         builder.HasIndex(a => a.Name)

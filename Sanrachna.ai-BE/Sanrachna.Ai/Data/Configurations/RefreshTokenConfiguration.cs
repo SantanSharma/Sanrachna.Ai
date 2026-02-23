@@ -20,7 +20,7 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
             .IsRequired();
 
         builder.Property(rt => rt.CreatedAt)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         builder.Property(rt => rt.RevokedByIp)
             .HasMaxLength(50);

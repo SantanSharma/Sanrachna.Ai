@@ -13,7 +13,7 @@ public class UserApplicationConfiguration : IEntityTypeConfiguration<UserApplica
         builder.HasKey(ua => ua.Id);
 
         builder.Property(ua => ua.GrantedAt)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Unique constraint on UserId and ApplicationId
         builder.HasIndex(ua => new { ua.UserId, ua.ApplicationId })

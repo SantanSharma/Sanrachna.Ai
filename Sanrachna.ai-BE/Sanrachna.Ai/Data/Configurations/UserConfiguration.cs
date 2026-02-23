@@ -37,7 +37,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValue(2); // Default to 'user' role
 
         builder.Property(u => u.CreatedAt)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Indexes
         builder.HasIndex(u => u.Email)

@@ -34,11 +34,23 @@ This API provides authentication and authorization services for the Sanrachna.AI
 
 1. Update the connection string in `appsettings.json` or `appsettings.Development.json`:
 ```json
+"ConnectionStrings": {
+    "DefaultConnection": "Server=localhost;Port=3306;Database=sanrachna_ai;User=root;Password=@tarzan123#;"
+  },
 {
   "ConnectionStrings": {
     "DefaultConnection": "Server=your-server;Database=SanrachnaAi;Trusted_Connection=True;TrustServerCertificate=True;"
   }
 }
+```
+
+- connection String for postgres
+```json
+- aaghiaag
+"ConnectionStrings": {
+    "DefaultConnection": "Host=db.cpcawbjiapsuycrlaldn.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=******;SSL Mode=Require;Trust Server Certificate=true"
+  },
+
 ```
 
 2. Configure JWT settings:

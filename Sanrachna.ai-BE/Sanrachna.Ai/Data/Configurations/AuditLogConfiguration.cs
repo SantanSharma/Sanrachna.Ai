@@ -21,10 +21,10 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
             .HasMaxLength(100);
 
         builder.Property(al => al.OldValues)
-            .HasColumnType("LONGTEXT");
+            .HasColumnType("jsonb");
 
         builder.Property(al => al.NewValues)
-            .HasColumnType("LONGTEXT");
+            .HasColumnType("jsonb");
 
         builder.Property(al => al.IpAddress)
             .HasMaxLength(50);
@@ -33,7 +33,7 @@ public class AuditLogConfiguration : IEntityTypeConfiguration<AuditLog>
             .HasMaxLength(500);
 
         builder.Property(al => al.Timestamp)
-            .HasDefaultValueSql("(UTC_TIMESTAMP())");
+            .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
         // Indexes
         builder.HasIndex(al => al.UserId)

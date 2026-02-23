@@ -4,18 +4,37 @@ This folder contains organized SQL scripts for database schema creation and seed
 
 ## 📁 Files
 
+### PostgreSQL (Current - Recommended)
 | File | Description |
 |------|-------------|
-| `01_create_tables.sql` | Complete database schema with all table definitions, indexes, and foreign keys |
-| `02_seed_data.sql` | Initial seed data for roles, applications, and EF migration history |
+| `01_create_tables_postgres.sql` | PostgreSQL schema with all table definitions, indexes, and constraints |
+| `02_seed_data_postgres.sql` | Initial seed data for PostgreSQL |
+
+### MySQL (Legacy)
+| File | Description |
+|------|-------------|
+| `01_create_tables.sql` | MySQL schema (legacy - for reference only) |
+| `02_seed_data.sql` | MySQL seed data (legacy - for reference only) |
 
 ## 🚀 Execution Order
 
-**Always execute in this order:**
+**For PostgreSQL (recommended):**
 
 ```bash
-1. 01_create_tables.sql   # Creates all tables, indexes, and constraints
-2. 02_seed_data.sql       # Inserts default roles and applications
+1. 01_create_tables_postgres.sql   # Creates all tables, indexes, and constraints
+2. 02_seed_data_postgres.sql       # Inserts default roles and applications
+```
+
+## 🔗 Connection String Format
+
+### PostgreSQL (Supabase)
+```
+Host=db.xxxxx.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=your-password;SSL Mode=Require;Trust Server Certificate=true
+```
+
+### PostgreSQL (Local)
+```
+Host=localhost;Port=5432;Database=sanrachna_ai;Username=postgres;Password=your-password
 ```
 
 ## 📊 Database Schema
