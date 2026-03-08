@@ -108,3 +108,6 @@ coverage/
 
 # sanrachna ignore files
 .sanrachnaignore
+
+# .claude ignore
+.claude
