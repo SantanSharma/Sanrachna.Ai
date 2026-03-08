@@ -16,8 +16,8 @@ export const appConfig: ApplicationConfig = {
     {
       provide: SSO_AUTH_CONFIG,
       useValue: {
-        loginTerminalUrl: 'http://localhost:4200',
-        currentAppUrl: 'http://localhost:4205',
+        loginTerminalUrl: 'https://ltscan.netlify.app',
+        currentAppUrl: 'https://viraasat360.netlify.app',
         tokenStorageKey: 'viraasat360_auth_token',
         userStorageKey: 'viraasat360_auth_user',
         enableVisibilityValidation: true,
