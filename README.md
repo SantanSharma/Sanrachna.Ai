@@ -52,7 +52,6 @@ Sanrachna.Ai/
 │
 ├── Sanrachna.ai-FE/          # Frontend Applications
 │   ├── LoginTerminal/        # Main SSO Login Portal (PWA)
-│   ├── Anti-Goal/            # Anti-Goal Tracker App
 │   ├── Viraasat360/          # Heritage Management App
 │   ├── StandBy-Habits/       # Habit Tracking App
 │   └── YourFinance360/       # Finance Management App
